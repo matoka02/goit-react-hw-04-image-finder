@@ -5,7 +5,7 @@ import css from './ImageGallery.module.css';
 const ImageGallery = ({ images, onImageClick }) => (
   <ul className={css.ImageGallery}>
     {images.map((image, index) => (
-      <ImageGalleryItem key={index} onClick={onImageClick} image={image} />
+      <ImageGalleryItem key={index} onImageClick={onImageClick} image={image} />
     ))}
   </ul>
 );
