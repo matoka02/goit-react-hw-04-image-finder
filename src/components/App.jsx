@@ -44,6 +44,13 @@ export class App extends Component {
     });
   };
 
+  componentDidUpdate(_, prevState) {
+    // console.log(prevProps);     // пустой массив
+    console.log(prevState);     // массив, предыдущее состояние FormToDo
+    console.log(this.state);    // массив, текущее состояние state
+
+  }
+
   handleImageClick = (evt) => {
     this.setState({
       modalOpen: true,
