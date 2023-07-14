@@ -17,37 +17,52 @@ export class App extends Component {
     modalAlt: '',
   };
 
-  handleSubmit = async (evt) => {
-    evt.preventDefault();
-    this.setState({ isLoading: true });
-    const inputForSearch = evt.target.elements.inputForSearch;
-    if (inputForSearch.value.trim() === '') {
-      return;
-    }
-    const response = await fetchImages(inputForSearch.value, 1);
-    this.setState({
-      images: response,
-      isLoading: false,
-      currentSearch: inputForSearch.value,
-      pageNr: 1, 
-    });
-  };
+  // handleSubmit = (evt) => {
+  //   evt.preventDefault();
+  //   this.setState({ isLoading: true });
+  //   const inputForSearch = evt.target.elements.inputForSearch;
+  //   if (inputForSearch.value.trim() === '') {
+  //     return;
+  //   }
+  //   const response = fetchImages(inputForSearch.value, 1);
+  //   this.setState({
+  //     images: response,
+  //     isLoading: false,
+  //     currentSearch: inputForSearch.value,
+  //     pageNr: 1, 
+  //   });
+  // };
 
-  handleClickMore = async () => {
-    const response = await fetchImages(
-      this.state.currentSearch,
-      this.state.pageNr + 1
-    );
-    this.setState({
-      images: [...this.state.images, ...response],
-      pageNr: this.state.pageNr + 1,
-    });
-  };
+  // handleClickMore = async () => {
+  //   const response = await fetchImages(
+  //     this.state.currentSearch,
+  //     this.state.pageNr + 1
+  //   );
+  //   this.setState({
+  //     images: [...this.state.images, ...response],
+  //     pageNr: this.state.pageNr + 1,
+  //   });
+  // };
 
   componentDidUpdate(_, prevState) {
     // console.log(prevProps);     // пустой массив
     console.log(prevState);     // массив, предыдущее состояние FormToDo
     console.log(this.state);    // массив, текущее состояние state
+
+    this.setState({ isLoading: true });
+    const prevStateText = prevState.currentSearch;
+    const nextStayText = this.state.currentSearch;
+
+    if (nextStayText !== prevStateText) {
+      const response = fetchImages(nextStayText, 1);
+
+      this.setState({
+        images: response,
+        isLoading: false,
+        currentSearch: nextStayText,
+        pageNr: 1, 
+      });
+    }
 
   }
 
@@ -57,6 +72,7 @@ export class App extends Component {
       modalAlt: evt.target.alt,
       modalImg: evt.target.name,
     });
+
   };
 
   handleModalClose = () => {
@@ -64,6 +80,22 @@ export class App extends Component {
       modalOpen: false,
       modalImg: '',
       modalAlt: '',
+    });
+  };
+
+  handleClickMore = () => {
+    this.setState((prevState) => ({
+      pageNr: prevState.pageNr + 1
+    }))
+  }
+
+  onFormSubmit = (searchName) => {
+    console.log(searchName);
+    this.setState({ 
+      images: {},
+      isLoading: false,
+      currentSearch: searchName,
+      pageNr: 1, 
     });
   };
 
@@ -78,7 +110,8 @@ export class App extends Component {
           paddingBottom: '24px',
         }}
       >
-        <Searchbar onSubmit={this.handleSubmit} />
+        {/* <Searchbar onSubmit={this.handleSubmit} /> */}
+        <Searchbar onSubmit={this.onFormSubmit} />
         {this.state.images ? (
           <ImageGallery
           onImageClick={this.handleImageClick}
