@@ -14,6 +14,9 @@ ImageGallery.propTypes = {
   images: propTypes.arrayOf(
     propTypes.shape({
       id: propTypes.number.isRequired,
+      webformatURL: propTypes.string.isRequired,
+      tags: propTypes.string.isRequired,
+      largeImageURL: propTypes.string.isRequired,
     })
   ).isRequired,
   onImageClick: propTypes.func.isRequired,
