@@ -11,8 +11,8 @@ export class Modal extends Component {
     window.removeEventListener("keydown", this.cleanEventListener);
   }
 
-  cleanEventListener = (e) => {
-    if (e.code === "Escape") {
+  cleanEventListener = (evt) => {
+    if (evt.code === "Escape") {
       this.props.onClick();
     }
   };
