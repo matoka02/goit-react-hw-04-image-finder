@@ -81,7 +81,20 @@ export class App extends Component {
           paddingBottom: '24px',
         }}
       >
-        {this.state.isLoading ? (
+        <Searchbar onSubmit={this.handleSubmit} />
+        {this.state.images ? (
+          <ImageGallery
+          onImageClick={this.handleImageClick}
+          images={this.state.images}
+        />) : null}
+
+        {this.state.images.length > 0 ? (
+              <Button onClick={this.handleClickMore} />
+            ) : null}
+        {this.state.isLoading && (
+          <Loader />
+        )}
+        {/* {this.state.isLoading ? (
           <Loader />
         ) : (
           <React.Fragment>
@@ -94,7 +107,7 @@ export class App extends Component {
               <Button onClick={this.handleClickMore} />
             ) : null}
           </React.Fragment>
-        )}
+        )} */}
         {this.state.modalOpen ? (
           <Modal
             src={this.state.modalImg}
