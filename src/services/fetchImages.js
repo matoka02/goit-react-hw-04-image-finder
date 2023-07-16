@@ -17,6 +17,8 @@ const fetchImages = async (inputValue, pageNr) => {
   // const total  = resp.hits.length;
   // console.log(total, '/',  totalHits);
 
+  console.log(resp);
+
   return resp.hits.map(image => {
     return {
       id: image.id,

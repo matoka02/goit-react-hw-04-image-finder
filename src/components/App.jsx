@@ -44,6 +44,17 @@ export class App extends Component {
   //   });
   // };
 
+  onFormSubmit = (evt) => {
+    const inputForSearch = evt.target.elements.inputForSearch;
+    console.log(inputForSearch.value);
+    this.setState({ 
+      // images: [],
+      // isLoading: false,
+      currentSearch: inputForSearch.value,
+      // pageNr: 1, 
+    });
+  };
+
   componentDidUpdate(_, prevState) {
     // console.log(prevProps);     // пустой массив
     console.log(prevState);     // массив, предыдущее состояние FormToDo
@@ -51,13 +62,15 @@ export class App extends Component {
 
     this.setState({ isLoading: true });
     const prevStateText = prevState.currentSearch;
+    // const prevStateText = ' ';
     const nextStayText = this.state.currentSearch;
+    console.log(nextStayText);
 
     if (nextStayText !== prevStateText) {
       const response = fetchImages(nextStayText, 1);
-
+console.log(response);
       this.setState({
-        images: response,
+        images: [...response],
         isLoading: false,
         currentSearch: nextStayText,
         pageNr: 1, 
@@ -89,15 +102,7 @@ export class App extends Component {
     }))
   }
 
-  onFormSubmit = (searchName) => {
-    console.log(searchName);
-    this.setState({ 
-      images: {},
-      isLoading: false,
-      currentSearch: searchName,
-      pageNr: 1, 
-    });
-  };
+
 
   render() {
     return (
