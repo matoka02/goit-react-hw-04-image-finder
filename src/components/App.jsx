@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Loader from './Loader/Loader';
-import {Modal} from './Modal/Modal';
+import { Modal } from './Modal/Modal';
 import Searchbar from './Searchbar/Searchbar';
 import fetchImages from '../services/fetchImages';
 
@@ -17,6 +17,50 @@ export class App extends Component {
     modalAlt: '',
   };
 
+  handleSubmit = evt => {
+    const inputForSearch = evt.target.elements.inputForSearch;
+    console.log(inputForSearch.value);
+    this.setState({
+      // images: [],
+      // isLoading: false,
+      currentSearch: inputForSearch.value,
+      // pageNr: 1,
+    });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.props);
+    if (prevProps.currentSearch !== this.props.currentSearch) {
+      this.setState({ isLoading: true });
+      fetchImages(this.props.currentSearch, 1)
+        .then(resp => resp.json())
+        .then(images => {
+          console.log(images);
+          if (images.status === 'ok') {
+            images.hits.map(image => {
+              return {
+                id: image.id,
+                webformatURL: image.webformatURL,
+                largeImageURL: image.largeImageURL,
+                tags: image.tags,
+              };
+            });
+            this.setState({
+              images: [...this.state.images, ...images],
+            });
+          } else return alert('no find');
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            images: [],
+            isLoading: false
+          });
+        });
+    }
+  };
+
+  // отклонено
   // handleSubmit = (evt) => {
   //   evt.preventDefault();
   //   this.setState({ isLoading: true });
@@ -29,7 +73,7 @@ export class App extends Component {
   //     images: response,
   //     isLoading: false,
   //     currentSearch: inputForSearch.value,
-  //     pageNr: 1, 
+  //     pageNr: 1,
   //   });
   // };
 
@@ -42,50 +86,15 @@ export class App extends Component {
   //     images: [...this.state.images, ...response],
   //     pageNr: this.state.pageNr + 1,
   //   });
-  // };
+  // };  
 
-  onFormSubmit = (evt) => {
-    const inputForSearch = evt.target.elements.inputForSearch;
-    console.log(inputForSearch.value);
-    this.setState({ 
-      // images: [],
-      // isLoading: false,
-      currentSearch: inputForSearch.value,
-      // pageNr: 1, 
-    });
-  };
 
-  componentDidUpdate(_, prevState) {
-    // console.log(prevProps);     // пустой массив
-    console.log(prevState);     // массив, предыдущее состояние FormToDo
-    console.log(this.state);    // массив, текущее состояние state
-
-    this.setState({ isLoading: true });
-    const prevStateText = prevState.currentSearch;
-    // const prevStateText = ' ';
-    const nextStayText = this.state.currentSearch;
-    console.log(nextStayText);
-
-    if (nextStayText !== prevStateText) {
-      const response = fetchImages(nextStayText, 1);
-console.log(response);
-      this.setState({
-        images: [...response],
-        isLoading: false,
-        currentSearch: nextStayText,
-        pageNr: 1, 
-      });
-    }
-
-  }
-
-  handleImageClick = (evt) => {
+  handleImageClick = evt => {
     this.setState({
       modalOpen: true,
       modalAlt: evt.target.alt,
       modalImg: evt.target.name,
     });
-
   };
 
   handleModalClose = () => {
@@ -97,12 +106,10 @@ console.log(response);
   };
 
   handleClickMore = () => {
-    this.setState((prevState) => ({
-      pageNr: prevState.pageNr + 1
-    }))
-  }
-
-
+    this.setState(prevState => ({
+      pageNr: prevState.pageNr + 1,
+    }));
+  };
 
   render() {
     return (
@@ -115,34 +122,21 @@ console.log(response);
           paddingBottom: '24px',
         }}
       >
-        {/* <Searchbar onSubmit={this.handleSubmit} /> */}
-        <Searchbar onSubmit={this.onFormSubmit} />
+        <Searchbar onSubmit={this.handleSubmit} />
+        
         {this.state.images ? (
           <ImageGallery
-          onImageClick={this.handleImageClick}
-          images={this.state.images}
-        />) : null}
+            onImageClick={this.handleImageClick}
+            images={this.state.images}
+          />
+        ) : null}
 
         {this.state.images.length > 0 ? (
-              <Button onClick={this.handleClickMore} />
-            ) : null}
-        {this.state.isLoading && (
-          <Loader />
-        )}
-        {/* {this.state.isLoading ? (
-          <Loader />
-        ) : (
-          <React.Fragment>
-            <Searchbar onSubmit={this.handleSubmit} />
-            <ImageGallery
-              onImageClick={this.handleImageClick}
-              images={this.state.images}
-            />
-            {this.state.images.length > 0 ? (
-              <Button onClick={this.handleClickMore} />
-            ) : null}
-          </React.Fragment>
-        )} */}
+          <Button onClick={this.handleClickMore} />
+        ) : null}
+
+        {this.state.isLoading && <Loader />}
+
         {this.state.modalOpen ? (
           <Modal
             src={this.state.modalImg}
