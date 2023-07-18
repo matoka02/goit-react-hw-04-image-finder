@@ -29,35 +29,22 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.props);
-    if (prevProps.currentSearch !== this.props.currentSearch) {
-      this.setState({ isLoading: true });
-      fetchImages(this.props.currentSearch, 1)
-        .then(resp => resp.json())
-        .then(images => {
-          console.log(images);
-          if (images.status === 'ok') {
-            images.hits.map(image => {
-              return {
-                id: image.id,
-                webformatURL: image.webformatURL,
-                largeImageURL: image.largeImageURL,
-                tags: image.tags,
-              };
-            });
-            this.setState({
-              images: [...this.state.images, ...images],
-            });
-          } else return alert('no find');
+    console.log(this.state.currentSearch);
+    console.log(prevState.currentSearch);
+
+    this.setState({ isLoading: true });
+    
+    if (this.state.currentSearch !== '') {
+      fetchImages(this.state.currentSearch, 1).then((response)=>{
+        console.log(response);
+        this.setState({
+          images: response,
+          isLoading: false,
+          pageNr: 1
         })
-        .catch(err => {
-          console.error(err);
-          this.setState({
-            images: [],
-            isLoading: false
-          });
-        });
+      })
     }
+
   };
 
   // отклонено

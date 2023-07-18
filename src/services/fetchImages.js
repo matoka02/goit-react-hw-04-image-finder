@@ -5,10 +5,21 @@ const API_KEY = '37972717-70d116d5c7dba3fcb6f3ce7e2';
 const PER_PAGE = 12;
 // axios.defaults.baseURL = `https://pixabay.com/api`;
 
-const fetchImages = (inputValue, pageNr) => {
-  return fetch(
+const  fetchImages = async (inputValue, pageNr) => {
+  console.log(inputValue);
+  const resp = await fetch(
     `${BASE_URL}?key=${API_KEY}&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${PER_PAGE}&page=${pageNr}`
-  )
+  ).then((resp)=>resp.json()); 
+  console.log(resp.hits);
+  return resp.hits.map(image => {
+    return {
+      id: image.id,
+      webformatURL: image.webformatURL,
+      largeImageURL: image.largeImageURL,
+      tags: image.tags, 
+    };
+  });
+
   // .then((resp) => {
   //   if (resp.ok) {
   //     return resp.json()
