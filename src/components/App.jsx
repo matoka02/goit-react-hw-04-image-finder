@@ -74,7 +74,7 @@ export class App extends Component {
           pageNr: 1,
         });        
       })
-    }
+    };
 
   };
 
