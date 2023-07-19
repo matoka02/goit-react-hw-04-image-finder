@@ -44,22 +44,30 @@ export class App extends Component {
 
   handleClickMore = () => {
     const { currentSearch, pageNr } = this.state;
-    fetchImages(currentSearch, pageNr + 1).then((response) => {
+    fetchImages(currentSearch, pageNr + 1).then((resp) => {
       this.setState((prevState) => ({
-        images: [...prevState.images, ...response],
+        images: [...prevState.images, ...resp],
         pageNr: prevState.pageNr + 1,
       }));
     });
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state.currentSearch);
-    console.log(prevState.currentSearch);
+    // console.log(this.state.currentSearch);
+    // console.log(prevState.currentSearch);
     
     if (this.state.currentSearch !== prevState.currentSearch) {
       this.setState({ isLoading: true });
       fetchImages(this.state.currentSearch, 1).then((response)=>{
-        console.log(response);
+        console.log(response.length);
+
+        if (response.length === 0) {
+          alert('No images on request');
+          // console.log(this.state);
+          // this.setState({currentSearch: ''})
+          return
+        };
+
         this.setState({
           images: response,
           isLoading: false,

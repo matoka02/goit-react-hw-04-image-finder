@@ -6,14 +6,13 @@ const PER_PAGE = 12;
 // axios.defaults.baseURL = `https://pixabay.com/api`;
 
 const  fetchImages = async (inputValue, pageNr) => {
-  console.log(inputValue);
+  // console.log(inputValue);
   const resp = await fetch(
     `${BASE_URL}?key=${API_KEY}&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${PER_PAGE}&page=${pageNr}`
   );
 
   if (resp.ok) {
     const data = await resp.json();
-    console.log(data.hits);
     return data.hits.map(image => {
       return {
         id: image.id,
