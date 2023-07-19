@@ -18,30 +18,53 @@ export class App extends Component {
   };
 
   handleSubmit = evt => {
+    evt.preventDefault();
     const inputForSearch = evt.target.elements.inputForSearch;
-    console.log(inputForSearch.value);
+    const searchValue = inputForSearch.value.trim();
+    // console.log(inputForSearch.value);
+    if (searchValue === '') {
+      return
+    };
     this.setState({
-      // images: [],
-      // isLoading: false,
+      images: [],
+      isLoading: true,
       currentSearch: inputForSearch.value,
-      // pageNr: 1,
+      pageNr: 1,
+    },
+    ()=> {
+      fetchImages(searchValue, 1).then((resp)=>{
+        this.setState({
+          images: resp,
+          isLoading: false
+        })
+      })
+    }
+    );
+  };
+
+  handleClickMore = () => {
+    const { currentSearch, pageNr } = this.state;
+    fetchImages(currentSearch, pageNr + 1).then((response) => {
+      this.setState((prevState) => ({
+        images: [...prevState.images, ...response],
+        pageNr: prevState.pageNr + 1,
+      }));
     });
   };
 
   componentDidUpdate(prevProps, prevState) {
     console.log(this.state.currentSearch);
     console.log(prevState.currentSearch);
-
-    this.setState({ isLoading: true });
     
-    if (this.state.currentSearch !== '') {
+    if (this.state.currentSearch !== prevState.currentSearch) {
+      this.setState({ isLoading: true });
       fetchImages(this.state.currentSearch, 1).then((response)=>{
         console.log(response);
         this.setState({
           images: response,
           isLoading: false,
-          pageNr: 1
-        })
+          pageNr: 1,
+        });        
       })
     }
 
@@ -92,12 +115,6 @@ export class App extends Component {
     });
   };
 
-  handleClickMore = () => {
-    this.setState(prevState => ({
-      pageNr: prevState.pageNr + 1,
-    }));
-  };
-
   render() {
     return (
       <div
@@ -111,26 +128,29 @@ export class App extends Component {
       >
         <Searchbar onSubmit={this.handleSubmit} />
         
-        {this.state.images ? (
-          <ImageGallery
-            onImageClick={this.handleImageClick}
-            images={this.state.images}
-          />
-        ) : null}
+        {this.state.images.length > 0 && (
+              <ImageGallery
+                  onImageClick={this.handleImageClick}
+                  images={this.state.images}
+              />
+          )}
 
         {this.state.images.length > 0 ? (
           <Button onClick={this.handleClickMore} />
         ) : null}
 
+{/* {this.state.images.length < 12 && <Button onClick={this.handleClickMore} />} */}
+
+
         {this.state.isLoading && <Loader />}
 
-        {this.state.modalOpen ? (
-          <Modal
-            src={this.state.modalImg}
-            alt={this.state.modalAlt}
-            handleClose={this.handleModalClose}
-          />
-        ) : null}
+        {this.state.modalOpen && (
+              <Modal
+                  src={this.state.modalImg}
+                  alt={this.state.modalAlt}
+                  handleClose={this.handleModalClose}
+              />
+          )}
       </div>
     );
   }

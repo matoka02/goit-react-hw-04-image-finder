@@ -9,24 +9,22 @@ const  fetchImages = async (inputValue, pageNr) => {
   console.log(inputValue);
   const resp = await fetch(
     `${BASE_URL}?key=${API_KEY}&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${PER_PAGE}&page=${pageNr}`
-  ).then((resp)=>resp.json()); 
-  console.log(resp.hits);
-  return resp.hits.map(image => {
-    return {
-      id: image.id,
-      webformatURL: image.webformatURL,
-      largeImageURL: image.largeImageURL,
-      tags: image.tags, 
-    };
-  });
+  );
 
-  // .then((resp) => {
-  //   if (resp.ok) {
-  //     return resp.json()
-  //   } 
-  //   return Promise.reject(new Error('No images on request'));
-  // }
-  // ); 
+  if (resp.ok) {
+    const data = await resp.json();
+    console.log(data.hits);
+    return data.hits.map(image => {
+      return {
+        id: image.id,
+        webformatURL: image.webformatURL,
+        largeImageURL: image.largeImageURL,
+        tags: image.tags,
+      };
+    });
+  } else {
+    throw new Error('No images on request');
+  }
 
   // // отклонено
   // const resp = await fetch(
