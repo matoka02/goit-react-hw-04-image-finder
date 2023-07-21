@@ -5,7 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import Loader from './Loader/Loader';
 import { Modal } from './Modal/Modal';
 import Searchbar from './Searchbar/Searchbar';
-import fetchImages from '../services/fetchImages';
+import { fetchImages, PER_PAGE } from '../services/fetchImages';
 
 export const App = () => {
   const [images, setImages] = useState([]);
@@ -22,24 +22,23 @@ export const App = () => {
     const searchValue = inputForSearch.value.trim();
     // console.log(inputForSearch.value);
     if (searchValue === '') {
-      return
-    };
+      return;
+    }
 
     setImages([]);
     setIsLoading(true);
     setCurrentSearch(searchValue);
     setPageNr(1);
 
-
-      fetchImages(searchValue, 1).then((resp)=>{
-        setImages(resp);
-        setIsLoading(false);
-      });
+    fetchImages(searchValue, 1).then(resp => {
+      setImages(resp);
+      setIsLoading(false);
+    });
   };
 
   const handleClickMore = () => {
     setIsLoading(true);
-    fetchImages(currentSearch, pageNr).then((resp)=>{
+    fetchImages(currentSearch, pageNr).then(resp => {
       setImages([...images, ...resp]);
       setIsLoading(false);
       setPageNr(pageNr + 1);
@@ -71,28 +70,16 @@ export const App = () => {
       <Searchbar onSubmit={handleSubmit} />
 
       {images.length > 0 && (
-        <ImageGallery
-          onImageClick={handleImageClick}
-          images={images}
-        />
+        <ImageGallery onImageClick={handleImageClick} images={images} />
       )}
 
-      {images.length > 0 ? (
-        <Button onClick={handleClickMore} />
-      ) : null}
-
-      {/* {images.length < 12 && <Button onClick={handleClickMore} />} */}
+      {(!(images.length < PER_PAGE)&&(images.length > 0)&&(!isLoading))&& <Button onClick={handleClickMore} />}
 
       {isLoading && <Loader />}
 
       {modalOpen && (
-        <Modal
-          src={modalImg}
-          alt={modalAlt}
-          handleClose={handleModalClose}
-        />
+        <Modal src={modalImg} alt={modalAlt} handleClose={handleModalClose} />
       )}
     </div>
   );
-
-}
+};

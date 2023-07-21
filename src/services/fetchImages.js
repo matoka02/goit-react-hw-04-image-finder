@@ -25,26 +25,10 @@ const  fetchImages = async (inputValue, pageNr) => {
     throw new Error('No images on request');
   }
 
-  // // отклонено
-  // const resp = await fetch(
-  //   `${BASE_URL}?key=${API_KEY}&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${PER_PAGE}&page=${pageNr}`
-  // ).then((resp)=>resp.json()); 
-  // return resp.hits.map(image => {
-  //   return {
-  //     id: image.id,
-  //     webformatURL: image.webformatURL,
-  //     largeImageURL: image.largeImageURL,
-  //     tags: image.tags, 
-  //   };
-  // });
-  // const totalHits = resp.totalHits;
-  // const total  = resp.hits.length;
-  // console.log(total, '/',  totalHits);
-
-  // // отклонено
   // const resp = await axios.get(`/?q=${inputValue}&page=${pageNr}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`
   // );  
 
 };
 
-export default fetchImages;
+// export default fetchImages;
+export {fetchImages, PER_PAGE};
