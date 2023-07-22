@@ -33,6 +33,7 @@ export const App = () => {
     fetchImages(searchValue, 1).then(resp => {
       setImages(resp);
       setIsLoading(false);
+      setPageNr(2);
     });
   };
 
