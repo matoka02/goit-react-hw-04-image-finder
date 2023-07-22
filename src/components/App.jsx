@@ -31,6 +31,13 @@ export const App = () => {
     setPageNr(1);
 
     fetchImages(searchValue, 1).then(resp => {
+
+      if (resp.length === 0) {
+        alert('No images on request');
+        setIsLoading(false);
+        return
+      };
+
       setImages(resp);
       setIsLoading(false);
       setPageNr(2);
@@ -38,6 +45,14 @@ export const App = () => {
   };
 
   const handleClickMore = () => {
+
+    if (pageNr > 1) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    };
+
     setIsLoading(true);
     fetchImages(currentSearch, pageNr).then(resp => {
       setImages([...images, ...resp]);
@@ -46,10 +61,10 @@ export const App = () => {
     });
   };
 
-  const handleImageClick = evt => {
+  const handleImageClick = ({target}) => {
     setModalOpen(true);
-    setModalAlt(evt.target.alt);
-    setModalImg(evt.target.name);
+    setModalAlt(target.alt);
+    setModalImg(target.name);
   };
 
   const handleModalClose = () => {
