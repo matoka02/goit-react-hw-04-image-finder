@@ -30,11 +30,6 @@ export const App = () => {
   };
 
   const handleClickMore = () => {
-    if (pageNr > 1) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      })};
     setPageNr(pageNr + 1);
   };
 
@@ -55,6 +50,12 @@ export const App = () => {
         setImages([...images, ...response]);
         setIsLoading(false);
         setPageNr(pageNr + 1);
+      }).finally(()=>{
+        if (pageNr > 1) {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          })};
       });
     }
   }, [currentSearch, pageNr]);
