@@ -57,7 +57,7 @@ export const App = () => {
         setPageNr(pageNr + 1);
       });
     }
-  }, [currentSearch, pageNr, images]);
+  }, [currentSearch, pageNr]);
 
   // // отклонено
   // const handleSubmit = evt => {
