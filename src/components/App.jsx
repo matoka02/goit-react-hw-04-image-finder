@@ -38,25 +38,28 @@ export const App = () => {
       return;
     }
     if (currentSearch || pageNr) {
-      fetchImages(currentSearch, pageNr).then(response => {
-        console.log(response.length);
-        setIsLoading(true);
-        if (response.length === 0) {
-          alert('No images on request');
-          setIsLoading(false);
-          return;
-        }
+      fetchImages(currentSearch, pageNr)
+        .then(response => {
+          console.log(response.length);
+          setIsLoading(true);
+          if (response.length === 0) {
+            alert('No images on request');
+            setIsLoading(false);
+            return;
+          }
 
-        setImages([...images, ...response]);
-        setIsLoading(false);
-        setPageNr(pageNr + 1);
-      }).finally(()=>{
-        if (pageNr > 1) {
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: "smooth",
-          })};
-      });
+          setImages([...images, ...response]);
+          setIsLoading(false);
+          setPageNr(pageNr + 1);
+        })
+        .finally(() => {
+          if (pageNr > 1) {
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: 'smooth',
+            });
+          }
+        });
     }
   }, [currentSearch, pageNr]);
 
