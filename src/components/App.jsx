@@ -37,11 +37,12 @@ export const App = () => {
     if (currentSearch.trim() === '') {
       return;
     }
-    if (currentSearch || pageNr) {
+    if (pageNr||currentSearch) {
       fetchImages(currentSearch, pageNr)
         .then(response => {
           console.log(response.length);
           setIsLoading(true);
+          
           if (response.length === 0) {
             alert('No images on request');
             setIsLoading(false);
@@ -50,7 +51,6 @@ export const App = () => {
 
           setImages([...response]);
           setIsLoading(false);
-          setPageNr(pageNr + 1);
         })
         .finally(() => {
           if (pageNr > 1) {
