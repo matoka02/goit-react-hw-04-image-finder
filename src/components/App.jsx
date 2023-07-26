@@ -48,7 +48,7 @@ export const App = () => {
             return;
           }
 
-          setImages([...images, ...response]);
+          setImages([...response]);
           setIsLoading(false);
           setPageNr(pageNr + 1);
         })
