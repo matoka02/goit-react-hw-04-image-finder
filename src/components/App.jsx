@@ -37,18 +37,18 @@ export const App = () => {
     if (currentSearch.trim() === '') {
       return;
     }
-    if (currentSearch||pageNr) {
+    if (currentSearch || pageNr) {
       setIsLoading(true);
       fetchImages(currentSearch, pageNr)
         .then(response => {
-          // console.log(response.length);
+          console.log(response.length);
           if (response.length === 0) {
             alert('No images on request');
             setIsLoading(false);
             return;
           }
 
-          setImages([...response]);
+          setImages(images => [...images, ...response]);
           setIsLoading(false);
         })
         .finally(() => {
